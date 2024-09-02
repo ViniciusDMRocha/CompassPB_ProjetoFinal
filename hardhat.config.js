@@ -1,17 +1,20 @@
 require('dotenv').config(); 
-const fs = require('fs');
 require("@nomicfoundation/hardhat-toolbox");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.24",
-  networks: {
-    sepolia: {
-      url: process.env.RPC_URL,
-      accounts: [process.env.ADMIN_ACCOUNT],
+  solidity: {
+    version: '0.8.20',
+    settings: {
+      evmVersion: 'london',
+      optimizer: {
+        enabled: true,
+      },
     },
   },
-  etherscan: {
-    apiKey: fs.readFileSync(".etherscan").toString().trim(),
+  networks: {
+    hardhat: {
+      initialBaseFeePerGas: 0,
+    },
   },
-};
+}
