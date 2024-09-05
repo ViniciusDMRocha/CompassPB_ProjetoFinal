@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, sans-serif;
+  background: url('./assets/images/fundo.jpg'); 
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+  color: rgb(0, 0, 0); 
+}
+
+h1 {
+  font-family: 'Poppins', sans-serif; /* Fonte personalizada */
+  font-size: 48px; /* Tamanho maior para o título */
+  font-weight: 700; /* Define a espessura da fonte */
+  text-align: center;
+  color: #ffeb3b; /* Cor amarela para destaque */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra para dar profundidade */
+  margin-top: 20px; /* Espaçamento superior */
+}
+
+.option {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  width: 150px;
+  background-color: #4CAF50; /* Verde mais fosco */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: white; /* Texto branco para contraste */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Transições suaves para hover */
+}
+
+.option img {
+  width: 100px;
+  height: 100px;
+}
+
+.option h2 {
+  font-family: 'Poppins', sans-serif; /* Fonte personalizada */
+  font-size: 20px; /* Tamanho da fonte para os títulos */
+  font-weight: 600; /* Peso da fonte */
+  text-align: center;
+  color: white; /* Cor do texto dos botões */
+  margin: 10px 0; /* Espaçamento vertical ao redor do texto */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Adiciona uma sombra ao texto para melhor contraste */
+}
+
+.option:hover {
+  background-color: #45a049; /* Cor verde mais clara ao passar o mouse */
+  cursor: pointer;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2); /* Sombra mais intensa ao passar o mouse */
+}
+
+.options-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.content {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); 
+  border: 2px solid #4CAF50; 
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  width: 40%; 
+  text-align: center;
+  color: #333; 
+  font-family: 'Poppins', sans-serif; 
+}
+
+.content p {
+  font-size: 20px; 
+  margin-bottom: 20px; 
+}
+
+.content form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; 
+}
+
+.content label {
+  font-size: 16px; 
+}
+
+.content input[type="text"],
+.content input[type="radio"] {
+  margin:  0; /* Espaçamento vertical para inputs */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.content button {
+  background-color: #4CAF50; /* Cor de fundo do botão */
+  color: white; /* Cor do texto do botão */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.content button:hover {
+  background-color: #45a049; /* Cor de fundo ao passar o mouse */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais intensa ao passar o mouse */
+}
+
+.small-input {
+
+  width: 50px;
+}
+

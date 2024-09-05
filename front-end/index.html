@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Fonte personalizada do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Sistema de Votação</title>
+  </head>
+  <body>
+    <h1>Sistema de Votação</h1>
+    <main>
+      <div class="options-container">
+        <div id="vote-option" class="option">
+          <img src="./assets/icons/voto.png" alt="Votar" />
+          <h2>Votar</h2>
+        </div>
+        <div id="signup-option" class="option">
+          <img src="./assets/icons/cadastro.png" alt="Cadastrar" />
+          <h2>Cadastrar</h2>
+        </div>
+        <div id="consult-option" class="option">
+          <img src="./assets/icons/consulta.png" alt="Consultar" />
+          <h2>Consultar</h2>
+        </div>
+      </div>
+
+      <div class="content-container">
+        <div id="vote-content" class="content" style="display: none;">
+          <p>Escolha um candidato:</p>
+          <form id="vote-form">
+            <label>
+              <input type="radio" name="candidate" value="Candidate 1" /> Candidato 1
+            </label>
+            <label>
+              <input type="radio" name="candidate" value="Candidate 2" /> Candidato 2
+            </label>
+            <label>
+              <input type="radio" name="candidate" value="Candidate 3" /> Candidato 3
+            </label>
+            <button type="submit">Votar</button>
+          </form>
+        </div>
+      
+        <div id="signup-content" class="content" style="display: none;">
+          <p>Cadastre um novo candidato:</p>
+          <form id="signup-form">
+            <label for="candidate-name">Nome do Candidato:</label>
+            <input type="text" id="candidate-name" name="candidate-name" />
+            
+            <label for="candidate-number">Número do Candidato:</label>
+            <input type="text" id="candidate-number" name="candidate-number" class="small-input" />
+            
+            <button type="submit">Cadastrar</button>
+          </form>
+        </div>
+      
+        <div id="consult-content" class="content" style="display: none;">
+          <p>Consulta de candidatos e votos:</p>
+          <ul>
+            <li>Candidato 1 - 0 votos</li>
+            <li>Candidato 2 - 0 votos</li>
+            <li>Candidato 3 - 0 votos</li>
+          </ul>
+        </div>
+      </div>
+      
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
