@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  AppName:
+    Type: String
+    Description: "The name of the application"
+  StageName:
+    Type: String
+    Default: "dev"
+    Description: "The name of the API stage"
+
+Resources:
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+        AllowHeaders: ['Content-Type', 'Authorization']
+        AllowOrigins: ['*']
+      StageName: !Ref StageName
+
+  AdminLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: ./voting-api/index.handler
+      Runtime: nodejs18.x
+      CodeUri: ./
+      MemorySize: 128
+      Timeout: 20
+      Environment:
+        Variables:
+          NOME_DA_TABELA: "Candidatos"
+          ID_DA_CONTA: 533267375208
+          REGIAO: "us-east-1"
+          STAGE: !Ref StageName
+
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+              Resource: arn:aws:dynamodb:us-east-1:533267375208:table/Candidatos
+
+
+        # - Version: '2012-10-17'
+        #   Statement:
+        #     - Effect: Allow
+        #       Action: 
+        #         - "s3:GetObject"
+        #       Resource: !Sub 
+        #         - '${BucketArn}/*'
+        #         - BucketArn: !ImportValue 
+        #             'Fn::Sub': '${AppName}-S3ConfigBucketArn'
+      Events:
+        ApiEventAdmin:
+          Type: HttpApi
+          Properties:
+            Path: /app
+            Method: ANY
+            ApiId: !Ref HttpApi
+        ApiEventAdminProxy:
+          Type: HttpApi
+          Properties:
+            Path: /app/{proxy+}
+            Method: ANY
+            ApiId: !Ref HttpApi
+
+Outputs:
+  ApiGatewayAdminInvokeURL:
+    Description: "Invoke URL for the API Gateway"
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/app'
+    Export:
+      Name: !Sub '${AppName}-ApiGatewayAdminInvokeURL-${StageName}'
+
+  AdminLambdaFunctionArn:
+    Description: "ARN of the deployed Lambda function"
+    Value: !GetAtt AdminLambdaFunction.Arn
+    Export:
+      Name: !Sub '${AppName}-AdminLambdaFunctionArn-${StageName}'
