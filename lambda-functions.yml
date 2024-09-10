@@ -41,11 +41,11 @@ Resources:
           Statement:
             - Effect: Allow
               Action:
-                - dynamodb:PutItem
-                - dynamodb:GetItem
-                - dynamodb:UpdateItem
-                - dynamodb:DeleteItem
-              Resource: arn:aws:dynamodb:us-east-1:533267375208:table/CandidatosTentativa2
+                - s3:GetObject
+                - s3:PutObject
+                - s3:ListBucket
+              Resource: arn:aws:s3:::candidatosbucket
+                        arn:aws:s3:::candidatosbucket/*
 
 
         # - Version: '2012-10-17'

@@ -66,8 +66,6 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
 });
 
 // Lida com a votação
-// Lida com a votação
-// Lida com a votação
 document.getElementById('vote-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
@@ -85,7 +83,9 @@ document.getElementById('vote-form').addEventListener('submit', function (e) {
   fetch('/vote', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ candidateNumber })
+    body: { 
+      number: candidateNumber 
+    }
   })
   .then(response => {
     console.log("Resposta da API:", response); // Adicionado para depuração

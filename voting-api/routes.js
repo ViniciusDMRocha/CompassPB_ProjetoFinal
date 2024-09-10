@@ -2,123 +2,79 @@ const AWS = require('aws-sdk');
 const express = require('express');
 const router = express.Router();
 
-// Configuração do DynamoDB
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = 'CandidatosTentativa2'; // Nome da tabela DynamoDB
+// Configuração do S3
+const s3 = new AWS.S3();
+const BUCKET_NAME = 'candidatosbucket'; // Nome do bucket S3
+const FILE_NAME = '/candidates.json'; // Nome do arquivo no bucket
 
+// Função para obter a lista de candidatos do S3
+const getCandidatesFromS3 = async () => {
+    try {
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: FILE_NAME
+        };
+        const data = await s3.getObject(params).promise();
+        return JSON.parse(data.Body.toString());
+    } catch (error) {
+        console.error('Erro ao obter candidatos do S3:', error);
+        return [];
+    }
+};
 
-let candidates = [
-    { id: 1, name: "Candidato 1", votes: 150 },
-    { id: 2, name: "Candidato 2", votes: 459 },
-    { id: 3, name: "Candidato 3", votes: 1545 }
-  ];
+// Função para salvar a lista de candidatos no S3
+const saveCandidatesToS3 = async (candidates) => {
+    try {
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: FILE_NAME,
+            Body: JSON.stringify(candidates),
+            ContentType: 'application/json'
+        };
+        await s3.putObject(params).promise();
+    } catch (error) {
+        console.error('Erro ao salvar candidatos no S3:', error);
+    }
+};
+
 // Rota para consultar candidatos e votos
-router.get('/candidates', (req, res) => {
+router.get('/candidates', async (req, res) => {
+    const candidates = await getCandidatesFromS3();
     res.status(200).json(candidates);
 });
-  
+
 // Rota para cadastrar um novo candidato
-
-// router.post('/candidates', async (req, res) => {
-//     try {
-//         // Consultar todos os candidatos na tabela para contar quantos já existem
-//         console.log("aaa")
-//         const scanParams = {
-//             TableName: TABLE_NAME,
-//             Select: 'COUNT'
-//         };
-//         const scanResult = await dynamoDB.scan(scanParams).promise();
-//         const candidatesCount = scanResult.Count;
-
-//         // Criar novo candidato com ID baseado no número de candidatos existentes
-//         const newCandidate = {
-//             id: (candidatesCount + 1), // ID baseado no número de candidatos + 1
-//             name: req.body.name,
-//             number: req.body.number,
-//             votes: 0
-//         };
-
-//         const putParams = {
-//             TableName: TABLE_NAME,
-//             Item: newCandidate
-//         };
-
-//         // Inserir o novo candidato na tabela DynamoDB
-//         await dynamoDB.put(putParams).promise();
-//         res.status(201).json(newCandidate);
-//     } catch (error) {
-//         console.error('Erro ao inserir candidato no DynamoDB:', error);
-//         res.status(500).json({ error: 'Não foi possível criar o candidato' });
-//     }
-// });    
-
 router.post('/candidates', async (req, res) => {
     try {
-        console.log("Iniciando POST /candidates");
-        
-        // Consultar todos os candidatos na tabela para contar quantos já existem
-        console.log("Executando scan no DynamoDB...");
-        const scanParams = {
-            TableName: TABLE_NAME,
-            Select: 'COUNT'
-        };
-        const scanResult = await dynamoDB.scan(scanParams).promise();
-        console.log("Scan result:", scanResult);
-        const candidatesCount = scanResult.Count;
-
-        // Criar novo candidato com ID baseado no número de candidatos existentes
-        console.log("Criando novo candidato...");
+        const candidates = await getCandidatesFromS3();
         const newCandidate = {
-            id: (candidatesCount + 1), // ID baseado no número de candidatos + 1
+            id: candidates.length + 1, // ID baseado no número de candidatos
             name: req.body.name,
             number: req.body.number,
             votes: 0
         };
-        console.log("Novo candidato:", newCandidate);
-
-        const putParams = {
-            TableName: TABLE_NAME,
-            Item: newCandidate
-        };
-
-        // Inserir o novo candidato na tabela DynamoDB
-        console.log("Inserindo novo candidato no DynamoDB...");
-        await dynamoDB.put(putParams).promise();
-        console.log("Candidato inserido com sucesso!");
+        candidates.push(newCandidate);
+        await saveCandidatesToS3(candidates);
         res.status(201).json(newCandidate);
     } catch (error) {
-        console.error('Erro ao inserir candidato no DynamoDB:', error);
+        console.error('Erro ao inserir candidato:', error);
         res.status(500).json({ error: 'Não foi possível criar o candidato' });
     }
 });
-
 
 // Rota para votar em um candidato
 router.post('/vote', async (req, res) => {
     const candidateNumber = req.body.number;
 
     try {
-        const getParams = {
-            TableName: TABLE_NAME,
-            Key: { number: candidateNumber }
-        };
-        const candidateResult = await dynamoDB.get(getParams).promise();
+        const candidates = await getCandidatesFromS3();
+        const candidate = candidates.find(c => c.number === candidateNumber);
 
-        if (candidateResult.Item) {
-            const updateParams = {
-                TableName: TABLE_NAME,
-                Key: { id: candidateId },
-                UpdateExpression: 'set votes = votes + :increment',
-                ExpressionAttributeValues: {
-                    ':increment': 1
-                },
-                ReturnValues: 'ALL_NEW'
-            };
-
-            const updatedCandidate = await dynamoDB.update(updateParams).promise();
-
+        if (candidate) {
+            candidate.votes += 1;
+            await saveCandidatesToS3(candidates);
             res.status(200).json({
-                message: `Você votou em ${updatedCandidate.Attributes.name}`,
+                message: `Você votou em ${candidate.name}`,
             });
         } else {
             res.status(404).json({ message: "Candidato não encontrado" });
@@ -129,8 +85,8 @@ router.post('/vote', async (req, res) => {
     }
 });
 
-router.get('*',function (req, res) {
-    return res.status(200).json({ message: 'Você não deveria estar aqui' })
-})
+router.get('*', (req, res) => {
+    res.status(200).json({ message: 'Você não deveria estar aqui' });
+});
 
-module.exports = router
+module.exports = router;
