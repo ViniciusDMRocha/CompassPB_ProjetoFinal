@@ -45,7 +45,7 @@ Resources:
                 - dynamodb:GetItem
                 - dynamodb:UpdateItem
                 - dynamodb:DeleteItem
-              Resource: arn:aws:dynamodb:us-east-1:533267375208:table/Candidatos
+              Resource: arn:aws:dynamodb:us-east-1:533267375208:table/CandidatosTentativa2
 
 
         # - Version: '2012-10-17'

@@ -32,27 +32,20 @@
         <div id="vote-content" class="content" style="display: none;">
           <p>Escolha um candidato:</p>
           <form id="vote-form">
-            <label>
-              <input type="radio" name="candidate" value="Candidate 1" /> Candidato 1
-            </label>
-            <label>
-              <input type="radio" name="candidate" value="Candidate 2" /> Candidato 2
-            </label>
-            <label>
-              <input type="radio" name="candidate" value="Candidate 3" /> Candidato 3
-            </label>
-            <button type="submit">Votar</button>
+            <!-- Candidatos serão inseridos aqui dinamicamente -->
           </form>
+          <button type="submit" form="vote-form">Votar</button>
         </div>
+        
       
         <div id="signup-content" class="content" style="display: none;">
           <p>Cadastre um novo candidato:</p>
           <form id="signup-form">
             <label for="candidate-name">Nome do Candidato:</label>
-            <input type="text" id="candidate-name" name="candidate-name" />
+            <input type="text" id="candidate-name" name="candidate-name" required />
             
             <label for="candidate-number">Número do Candidato:</label>
-            <input type="text" id="candidate-number" name="candidate-number" class="small-input" />
+            <input type="text" id="candidate-number" name="candidate-number" required />
             
             <button type="submit">Cadastrar</button>
           </form>
@@ -61,9 +54,7 @@
         <div id="consult-content" class="content" style="display: none;">
           <p>Consulta de candidatos e votos:</p>
           <ul>
-            <li>Candidato 1 - 0 votos</li>
-            <li>Candidato 2 - 0 votos</li>
-            <li>Candidato 3 - 0 votos</li>
+            <!-- Lista de candidatos será inserida aqui dinamicamente -->
           </ul>
         </div>
       </div>
